@@ -103,13 +103,13 @@ python app.py
 
 #### Screenshots (Add at least 3)
 
-![Dashboard Overview](https://raw.githubusercontent.com/roo-001/bill/main/public/next.svg)
+![Dashboard Overview](https://raw.githubusercontent.com/roo-001/bill/main/public/homepage.png)
 *The centralized dashboard showing total expenses and per-person breakdown.*
 
-![Add Member](https://raw.githubusercontent.com/roo-001/bill/main/public/next.svg)
+![Add Member](https://raw.githubusercontent.com/roo-001/bill/main/public/add_member.png)
 *Interactive member management page with avatar selection.*
 
-![Add Expense](https://raw.githubusercontent.com/roo-001/bill/main/public/next.svg)
+![Add Expense](https://raw.githubusercontent.com/roo-001/bill/main/public/add_expense.png)
 *Expense recording with dynamic auto-split preview.*
 
 #### Diagrams
