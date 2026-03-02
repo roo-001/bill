@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BillBreak — Add Member</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0f0f0f;
+    --white: #fafaf8;
+    --cream: #f4f1ea;
+    --green: #2d6a4f;
+    --green-light: #52b788;
+    --green-pale: #d8f3dc;
+    --red-pale: #fde8e8;
+    --red: #c0392b;
+    --gray: #8a8a7e;
+    --border: #e2ddd5;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--black);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.4rem 5vw;
+    border-bottom: 1px solid var(--border);
+    background: var(--white);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    color: var(--black);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .logo span { color: var(--green); }
+
+  .nav-links {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    color: var(--gray);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+
+  .nav-link:hover { background: var(--cream); color: var(--black); }
+  .nav-link.active { background: var(--green-pale); color: var(--green); font-weight: 500; }
+
+  /* LAYOUT */
+  .layout {
+    display: flex;
+    flex: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 3rem 2rem;
+    gap: 3rem;
+    align-items: flex-start;
+  }
+
+  /* LEFT — FORM */
+  .form-col {
+    flex: 0 0 420px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .page-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 0.6rem;
+  }
+
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  .page-sub {
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* FORM CARD */
+  .form-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+  }
+
+  .field { margin-bottom: 1.4rem; }
+
+  label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--black);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.01em;
+  }
+
+  .required { color: var(--green); margin-left: 2px; }
+
+  input[type="text"],
+  input[type="email"],
+  select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    color: var(--black);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    appearance: none;
+  }
+
+  input::placeholder { color: #c0bdb6; }
+
+  input:focus, select:focus {
+    border-color: var(--green-light);
+    box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.12);
+  }
+
+  input.error { border-color: var(--red); }
+  input.success { border-color: var(--green-light); }
+
+  .input-hint {
+    font-size: 0.76rem;
+    color: var(--gray);
+    margin-top: 0.35rem;
+  }
+
+  .error-msg {
+    font-size: 0.76rem;
+    color: var(--red);
+    margin-top: 0.35rem;
+    display: none;
+  }
+
+  /* AVATAR PICKER */
+  .avatar-label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    margin-bottom: 0.6rem;
+    display: block;
+  }
+
+  .avatar-grid {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .avatar-opt {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--cream);
+  }
+
+  .avatar-opt:hover { border-color: var(--green-light); transform: scale(1.08); }
+  .avatar-opt.selected { border-color: var(--green); background: var(--green-pale); box-shadow: 0 0 0 3px rgba(82,183,136,0.2); }
+
+  /* SUBMIT */
+  .btn-submit {
+    width: 100%;
+    padding: 0.85rem;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-submit:hover {
+    background: #245a42;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(45,106,79,0.25);
+  }
+
+  .btn-submit:active { transform: translateY(0); }
+
+  .btn-cancel {
+    width: 100%;
+    padding: 0.75rem;
+    background: transparent;
+    color: var(--gray);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    margin-top: 0.6rem;
+    transition: all 0.15s;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+  }
+
+  .btn-cancel:hover { border-color: var(--black); color: var(--black); }
+
+  /* SUCCESS TOAST */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--black);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 100px;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 200;
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* RIGHT — MEMBER LIST */
+  .members-col {
+    flex: 1;
+    animation: fadeUp 0.5s 0.15s ease both;
+  }
+
+  .members-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .members-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    letter-spacing: -0.02em;
+  }
+
+  .member-count {
+    background: var(--green-pale);
+    color: var(--green);
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.25rem 0.7rem;
+    border-radius: 100px;
+  }
+
+  .member-list { display: flex; flex-direction: column; gap: 0.7rem; }
+
+  .member-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.2s;
+    animation: slideIn 0.35s ease both;
+  }
+
+  .member-card:hover {
+    border-color: var(--green-light);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+
+  .member-avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: var(--green-pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .member-info { flex: 1; }
+
+  .member-name {
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .member-role {
+    font-size: 0.75rem;
+    color: var(--gray);
+  }
+
+  .member-share {
+    text-align: right;
+  }
+
+  .share-amount {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--green);
+    letter-spacing: -0.02em;
+  }
+
+  .share-label {
+    font-size: 0.7rem;
+    color: var(--gray);
+    margin-top: 0.1rem;
+  }
+
+  .remove-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--border);
+    font-size: 1.1rem;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+    line-height: 1;
+  }
+
+  .remove-btn:hover { color: var(--red); background: var(--red-pale); }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--gray);
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+  }
+
+  .empty-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+  .empty-text { font-size: 0.9rem; line-height: 1.6; }
+
+  /* TOTAL BAR */
+  .total-bar {
+    margin-top: 1.2rem;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .total-label { font-size: 0.85rem; color: var(--gray); }
+  .total-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--black);
+    letter-spacing: -0.02em;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  @media (max-width: 768px) {
+    .layout { flex-direction: column; padding: 2rem 1.2rem; gap: 2rem; }
+    .form-col { flex: none; width: 100%; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">Bill<span>Break</span></a>
+  <div class="nav-links">
+    <a href="#" class="nav-link">🏠 Dashboard</a>
+    <a href="#" class="nav-link active">👥 Members</a>
+    <a href="#" class="nav-link">📋 Expenses</a>
+  </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- FORM COLUMN -->
+  <div class="form-col">
+    <div class="page-label">Members</div>
+    <h1 class="page-title">Add a member</h1>
+    <p class="page-sub">Add everyone who shares household expenses. Each member will have bills split equally.</p>
+
+    <div class="form-card">
+      <!-- Avatar Picker -->
+      <div class="field">
+        <span class="avatar-label">Choose an avatar</span>
+        <div class="avatar-grid" id="avatarGrid">
+          <div class="avatar-opt selected" data-emoji="🧑" onclick="selectAvatar(this)">🧑</div>
+          <div class="avatar-opt" data-emoji="👩" onclick="selectAvatar(this)">👩</div>
+          <div class="avatar-opt" data-emoji="👨" onclick="selectAvatar(this)">👨</div>
+          <div class="avatar-opt" data-emoji="🧒" onclick="selectAvatar(this)">🧒</div>
+          <div class="avatar-opt" data-emoji="👴" onclick="selectAvatar(this)">👴</div>
+          <div class="avatar-opt" data-emoji="👵" onclick="selectAvatar(this)">👵</div>
+          <div class="avatar-opt" data-emoji="🧑‍💻" onclick="selectAvatar(this)">🧑‍💻</div>
+          <div class="avatar-opt" data-emoji="🧑‍🍳" onclick="selectAvatar(this)">🧑‍🍳</div>
+        </div>
+      </div>
+
+      <!-- Name -->
+      <div class="field">
+        <label for="memberName">Full Name <span class="required">*</span></label>
+        <input type="text" id="memberName" placeholder="e.g. Arjun Mehta" autocomplete="off">
+        <div class="error-msg" id="nameError">Please enter a name.</div>
+      </div>
+
+      <!-- Role -->
+      <div class="field">
+        <label for="memberRole">Role</label>
+        <select id="memberRole">
+          <option value="Member">Member</option>
+          <option value="Admin">Admin</option>
+          <option value="Guest">Guest</option>
+        </select>
+        <div class="input-hint">Admins can add and remove members.</div>
+      </div>
+
+      <!-- Email (optional) -->
+      <div class="field">
+        <label for="memberEmail">Email <span style="color:var(--gray); font-weight:300;">(optional)</span></label>
+        <input type="email" id="memberEmail" placeholder="arjun@email.com">
+        <div class="input-hint">Used for future notifications only.</div>
+      </div>
+
+      <button class="btn-submit" onclick="addMember()">
+        <span>➕</span> Add Member
+      </button>
+      <a href="#" class="btn-cancel">Cancel</a>
+    </div>
+  </div>
+
+  <!-- MEMBERS COLUMN -->
+  <div class="members-col">
+    <div class="members-header">
+      <div class="members-title">Current Members</div>
+      <div class="member-count" id="memberCount">4 members</div>
+    </div>
+
+    <div class="member-list" id="memberList"></div>
+
+    <div class="total-bar" id="totalBar">
+      <span class="total-label">Per person share (₹14,320 total)</span>
+      <span class="total-value" id="perPersonVal">₹3,580</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ Member added successfully!</div>
+
+<script>
+  const TOTAL_EXPENSES = 14320;
+
+  let members = [
+    { id: 1, name: "Arjun Mehta",   role: "Admin",  avatar: "👨" },
+    { id: 2, name: "Priya Sharma",  role: "Member", avatar: "👩" },
+    { id: 3, name: "Rahul Nair",    role: "Member", avatar: "🧑" },
+    { id: 4, name: "Nisha Kapoor",  role: "Guest",  avatar: "👵" },
+  ];
+
+  let selectedAvatar = "🧑";
+
+  function selectAvatar(el) {
+    document.querySelectorAll('.avatar-opt').forEach(a => a.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedAvatar = el.dataset.emoji;
+  }
+
+  function renderMembers() {
+    const list = document.getElementById('memberList');
+    const count = document.getElementById('memberCount');
+    const perPerson = document.getElementById('perPersonVal');
+    const share = members.length > 0 ? Math.round(TOTAL_EXPENSES / members.length) : 0;
+
+    count.textContent = `${members.length} member${members.length !== 1 ? 's' : ''}`;
+    perPerson.textContent = `₹${share.toLocaleString()}`;
+
+    if (members.length === 0) {
+      list.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">👥</div>
+          <div class="empty-text">No members yet.<br>Add your first household member above.</div>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = members.map((m, i) => `
+      <div class="member-card" style="animation-delay: ${i * 0.05}s">
+        <div class="member-avatar">${m.avatar}</div>
+        <div class="member-info">
+          <div class="member-name">${m.name}</div>
+          <div class="member-role">${m.role}</div>
+        </div>
+        <div class="member-share">
+          <div class="share-amount">₹${share.toLocaleString()}</div>
+          <div class="share-label">owes</div>
+        </div>
+        <button class="remove-btn" onclick="removeMember(${m.id})" title="Remove member">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function addMember() {
+    const nameInput = document.getElementById('memberName');
+    const nameError = document.getElementById('nameError');
+    const name = nameInput.value.trim();
+
+    if (!name) {
+      nameInput.classList.add('error');
+      nameError.style.display = 'block';
+      nameInput.focus();
+      return;
+    }
+
+    nameInput.classList.remove('error');
+    nameError.style.display = 'none';
+    nameInput.classList.add('success');
+
+    const role = document.getElementById('memberRole').value;
+
+    members.push({
+      id: Date.now(),
+      name,
+      role,
+      avatar: selectedAvatar
+    });
+
+    renderMembers();
+    showToast(`${name} added to household!`);
+
+    // Reset form
+    setTimeout(() => {
+      nameInput.value = '';
+      nameInput.classList.remove('success');
+      document.getElementById('memberEmail').value = '';
+    }, 300);
+  }
+
+  function removeMember(id) {
+    members = members.filter(m => m.id !== id);
+    renderMembers();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = '✅ ' + msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // Enter key support
+  document.getElementById('memberName').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addMember();
+  });
+
+  renderMembers();
+</script>
+
+</body>
+</html>

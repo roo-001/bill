@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BillBreak — Shared Expenses, Simplified</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0f0f0f;
+    --white: #fafaf8;
+    --cream: #f4f1ea;
+    --green: #2d6a4f;
+    --green-light: #52b788;
+    --green-pale: #d8f3dc;
+    --gray: #8a8a7e;
+    --border: #e2ddd5;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--black);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 6vw;
+    background: rgba(250, 250, 248, 0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--black);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .logo span { color: var(--green); }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  nav ul a {
+    text-decoration: none;
+    color: var(--gray);
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    transition: color 0.2s;
+  }
+
+  nav ul a:hover { color: var(--black); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: #245a42;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(45, 106, 79, 0.25);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--black);
+    border: 1.5px solid var(--border);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--black);
+  }
+
+  .btn-lg {
+    padding: 0.9rem 2rem;
+    font-size: 1rem;
+    border-radius: 8px;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 6vw 6rem;
+    position: relative;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--green-pale);
+    color: var(--green);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.9rem;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    width: fit-content;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    max-width: 14ch;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--green);
+  }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 1.15rem;
+    color: var(--gray);
+    max-width: 48ch;
+    font-weight: 300;
+    line-height: 1.7;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-cta {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .hero-note {
+    font-size: 0.8rem;
+    color: var(--gray);
+  }
+
+  /* DASHBOARD PREVIEW */
+  .preview-wrapper {
+    margin-top: 6rem;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+
+  .preview-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 780px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+  }
+
+  .preview-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .preview-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  .preview-dot:nth-child(1) { background: #ff6b6b; }
+  .preview-dot:nth-child(2) { background: #ffd93d; }
+  .preview-dot:nth-child(3) { background: #6bcb77; }
+
+  .preview-title {
+    margin-left: 0.5rem;
+    font-size: 0.78rem;
+    color: var(--gray);
+  }
+
+  .preview-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat-box {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.7rem;
+    color: var(--black);
+    letter-spacing: -0.02em;
+  }
+
+  .stat-value.green { color: var(--green); }
+
+  .preview-list { display: flex; flex-direction: column; gap: 0.6rem; }
+
+  .expense-row {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.88rem;
+  }
+
+  .expense-name { font-weight: 500; }
+  .expense-meta { color: var(--gray); font-size: 0.78rem; margin-top: 0.1rem; }
+  .expense-amount { font-weight: 500; color: var(--green); }
+
+  .member-chips {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 1.2rem;
+  }
+
+  .chip {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.78rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .chip-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green-light);
+  }
+
+  /* FEATURES */
+  .section {
+    padding: 8rem 6vw;
+  }
+
+  .section-label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    max-width: 20ch;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 4rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--border);
+  }
+
+  .feature {
+    background: var(--white);
+    padding: 2.5rem;
+    transition: background 0.2s;
+  }
+
+  .feature:hover { background: var(--cream); }
+
+  .feature-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: var(--green-pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .feature h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.02em;
+  }
+
+  .feature p {
+    font-size: 0.9rem;
+    color: var(--gray);
+    line-height: 1.65;
+  }
+
+  /* HOW IT WORKS */
+  .how-section {
+    padding: 8rem 6vw;
+    background: var(--cream);
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3rem;
+    margin-top: 4rem;
+  }
+
+  .step-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3rem;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .step h4 {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .step p {
+    font-size: 0.85rem;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  .step-line {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .step-line::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* STATS STRIP */
+  .stats-strip {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .strip-stat {
+    padding: 3rem 6vw;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .strip-stat:last-child { border-right: none; }
+
+  .strip-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3rem;
+    letter-spacing: -0.03em;
+    color: var(--green);
+  }
+
+  .strip-desc {
+    font-size: 0.85rem;
+    color: var(--gray);
+    margin-top: 0.3rem;
+  }
+
+  /* CTA SECTION */
+  .cta-section {
+    padding: 10rem 6vw;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    max-width: 18ch;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-section p {
+    color: var(--gray);
+    font-size: 1rem;
+    max-width: 40ch;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 6vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: var(--gray);
+  }
+
+  footer a {
+    color: var(--gray);
+    text-decoration: none;
+  }
+
+  footer a:hover { color: var(--black); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .stats-strip { grid-template-columns: 1fr; }
+    .strip-stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .preview-stats { grid-template-columns: 1fr 1fr; }
+    nav ul { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Bill<span>Break</span></a>
+  <ul>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="/add_member" class="btn btn-primary">Get Started</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">✦ Household Finance Made Easy</div>
+  <h1>Split bills, <em>not</em> friendships.</h1>
+  <p class="hero-sub">BillBreak keeps every shared expense transparent and fair — for families, roommates, and everyone in between.</p>
+  <div class="hero-cta">
+    <a href="/add_member" class="btn btn-primary btn-lg">Start for free →</a>
+    <a href="#how" class="btn btn-outline btn-lg">See how it works</a>
+  </div>
+
+  <!-- Dashboard Preview -->
+  <div class="preview-wrapper">
+    <div class="preview-card">
+      <div class="preview-bar">
+        <div class="preview-dot"></div>
+        <div class="preview-dot"></div>
+        <div class="preview-dot"></div>
+        <span class="preview-title">BillBreak Dashboard — October 2025</span>
+      </div>
+
+      <div class="preview-stats">
+        <div class="stat-box">
+          <div class="stat-label">Total Expenses</div>
+          <div class="stat-value">₹14,320</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Members</div>
+          <div class="stat-value">4</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Per Person</div>
+          <div class="stat-value green">₹3,580</div>
+        </div>
+      </div>
+
+      <div class="preview-list">
+        <div class="expense-row">
+          <div>
+            <div class="expense-name">Electricity Bill</div>
+            <div class="expense-meta">Added by Arjun · Oct 14</div>
+          </div>
+          <div class="expense-amount">₹2,400</div>
+        </div>
+        <div class="expense-row">
+          <div>
+            <div class="expense-name">Grocery Run</div>
+            <div class="expense-meta">Added by Priya · Oct 18</div>
+          </div>
+          <div class="expense-amount">₹3,200</div>
+        </div>
+        <div class="expense-row">
+          <div>
+            <div class="expense-name">Internet & Cable</div>
+            <div class="expense-meta">Added by Rahul · Oct 20</div>
+          </div>
+          <div class="expense-amount">₹1,800</div>
+        </div>
+      </div>
+
+      <div class="member-chips">
+        <div class="chip"><div class="chip-dot"></div>Arjun</div>
+        <div class="chip"><div class="chip-dot"></div>Priya</div>
+        <div class="chip"><div class="chip-dot"></div>Rahul</div>
+        <div class="chip"><div class="chip-dot"></div>Nisha</div>
+      </div>
+      <!-- Simple forms for adding members and expenses -->
+      <div style="margin-top:1.4rem; display:flex; gap:1rem; flex-wrap:wrap;">
+        <form action="/add_member" method="post" style="display:flex; gap:0.5rem; align-items:center;">
+          <input name="name" placeholder="New member name" required style="padding:0.5rem; border-radius:6px; border:1px solid var(--border);" />
+          <button class="btn btn-outline" type="submit">Add Member</button>
+        </form>
+
+        <form action="/add_expense" method="post" style="display:flex; gap:0.5rem; align-items:center;">
+          <input name="title" placeholder="Expense title" required style="padding:0.5rem; border-radius:6px; border:1px solid var(--border);" />
+          <input name="amount" placeholder="Amount" required type="number" step="0.01" style="padding:0.5rem; border-radius:6px; border:1px solid var(--border); width:100px;" />
+          <select name="paid_by" required style="padding:0.5rem; border-radius:6px; border:1px solid var(--border);">
+            {% for m in members %}
+              <option value="{{ m.id }}">{{ m.name }}</option>
+            {% endfor %}
+          </select>
+          <button class="btn btn-primary" type="submit">Add Expense</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="strip-stat fade-in">
+    <div class="strip-num">100%</div>
+    <div class="strip-desc">Equal split, every time</div>
+  </div>
+  <div class="strip-stat fade-in">
+    <div class="strip-num">0</div>
+    <div class="strip-desc">Disputes left unresolved</div>
+  </div>
+  <div class="strip-stat fade-in">
+    <div class="strip-num">∞</div>
+    <div class="strip-desc">Members you can add</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">Everything you need for shared living.</h2>
+
+  <div class="features-grid">
+    <div class="feature fade-in">
+      <div class="feature-icon">👥</div>
+      <h3>Member Management</h3>
+      <p>Add or remove household members in seconds. Everyone gets a clear view of who's part of the pool.</p>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">📋</div>
+      <h3>Expense Recording</h3>
+      <p>Log any shared expense with a name and amount. BillBreak stores and organizes every entry automatically.</p>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">⚡</div>
+      <h3>Auto-Split</h3>
+      <p>Bills are instantly divided equally among all members. No manual math, no arguments about who owes what.</p>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">📊</div>
+      <h3>Central Dashboard</h3>
+      <p>A single view showing total expenses, per-person share, and every recorded bill — always up to date.</p>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">🔒</div>
+      <h3>Transparent History</h3>
+      <p>Every expense is logged with who added it and when. Full accountability, zero confusion.</p>
+    </div>
+    <div class="feature fade-in">
+      <div class="feature-icon">🛠️</div>
+      <h3>Lightweight & Fast</h3>
+      <p>Built on Flask and SQLite — no bloat, no subscriptions. Just a simple tool that works.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="section-label">How it works</div>
+  <h2 class="section-title">Up and running in minutes.</h2>
+
+  <div class="steps">
+    <div class="step fade-in">
+      <div class="step-num">01</div>
+      <div class="step-line"></div>
+      <h4>Create your household</h4>
+      <p>Set up BillBreak and give your household a name. Takes under a minute.</p>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">02</div>
+      <div class="step-line"></div>
+      <h4>Add members</h4>
+      <p>Add everyone who shares expenses — family, roommates, or flatmates.</p>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">03</div>
+      <div class="step-line"></div>
+      <h4>Log expenses</h4>
+      <p>Whenever a shared bill comes in, record it with a name and amount.</p>
+    </div>
+    <div class="step fade-in">
+      <div class="step-num">04</div>
+      <div class="step-line"></div>
+      <h4>See everyone's share</h4>
+      <p>BillBreak automatically calculates and displays what each person owes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <h2 class="fade-in">Ready to end the bill confusion?</h2>
+  <p class="fade-in">BillBreak is free, open, and ready to deploy. No subscriptions, no accounts — just clarity.</p>
+  <a href="/add_member" class="btn btn-primary btn-lg fade-in">Get BillBreak →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="logo" style="font-family: 'DM Serif Display', serif; font-size: 1.1rem;">Bill<span style="color: var(--green)">Break</span></a>
+  <span>Built with Flask & SQLite · © 2025 BillBreak</span>
+  <div style="display:flex; gap: 1.5rem;">
+    <a href="#">GitHub</a>
+    <a href="#">Docs</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

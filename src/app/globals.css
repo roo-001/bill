@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+:root {
+  --black: #0f0f0f;
+  --white: #fafaf8;
+  --cream: #f4f1ea;
+  --green: #2d6a4f;
+  --green-light: #52b788;
+  --green-pale: #d8f3dc;
+  --gray: #8a8a7e;
+  --border: #e2ddd5;
+  
+  --background: var(--white);
+  --foreground: var(--black);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-cream: var(--cream);
+  --color-green-primary: var(--green);
+  --color-green-light: var(--green-light);
+  --color-green-pale: var(--green-pale);
+  --color-gray-muted: var(--gray);
+  --color-border-subtle: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Base button styles migrated from legacy */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--green);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #245a42;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(45, 106, 79, 0.25);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--black);
+  border: 1.5px solid var(--border);
+}
+
+.btn-outline:hover {
+  border-color: var(--black);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
