@@ -6,7 +6,7 @@
 
 ## Basic Details
 
-### Team Name: [Roopasree]
+### Team Name: [Roopasree Rajesh]
 
 ### Team Members
 - Member 1: [Roopasree Rajesh] - [Mar Baselios Christian College of Engineering]
@@ -16,12 +16,12 @@
 [https://github.com/roo-001/bill](https://github.com/roo-001/bill)
 
 ### Project Description
-[BillBreak is a web-based bill-splitting application designed to maintain financial transparency among family members or roommates. It allows users to record shared expenses and automatically splits the amount among members, displaying total spending and individual shares through a centralized dashboard.]
+[BillBreak is a web-based  household expense tracking and  bill-splitting application designed to maintain financial transparency among shared living environments such as family members or roommates. It allows users to record shared expenses and automatically splits the amount among members, displaying total spending and individual shares through a centralized dashboard.]
 
 ### The Problem statement
-[The core problem being solved is the difficulty in fairly dividing shared household expenses. Manual calculations often lead to errors, misunderstandings, and disputes among members.
-
-Bill splitting provides an automated and transparent method to calculate each person’s share accurately, ensuring fairness and reducing financial confusion in shared living environments.]
+[In shared households, managing common expenses such as rent, groceries, and utility bills is often handled manually, which can lead to calculation errors, lack of transparency, and disputes among members. There is no structured system to accurately track contributions and pending balances.
+Therefore, a reliable and automated solution is required to record expenses, split bills fairly, and provide clear visibility of financial responsibilities for all household members.
+]
 
 ### The Solution
 [The solution is to develop a web-based application that records and automatically splits the total amount among members. The system calculates each person’s share instantly and stores the data in a centralized database.
@@ -89,14 +89,14 @@ npm run dev
 
 #### Screenshots (Add at least 3)
 
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
+![Dashboard Overview](https://raw.githubusercontent.com/roo-001/bill/main/public/homepage.png)
+*The centralized dashboard showing total expenses and per-person breakdown.*
 
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
+![Add Member](https://raw.githubusercontent.com/roo-001/bill/main/public/add_member.png)
+*Interactive member management page with avatar selection.*
 
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
+![Add Expense](https://raw.githubusercontent.com/roo-001/bill/main/public/add_expense.png)
+*Expense recording with dynamic auto-split preview.*
 
 #### Diagrams
 
@@ -147,19 +147,22 @@ npm run dev
 
 ##### Endpoints
 
-**GET /api/endpoint**
-- **Description:** [What it does]
+**POST /add_member**
+- **Description:** Adds a new member to the household.
 - **Parameters:**
-  - `param1` (string): [Description]
-  - `param2` (integer): [Description]
-- **Response:**
+  - `name` (string): Full name of the member.
+- **Response:** Redirects to dashboard after adding.
+
+**POST /add_expense**
+- **Description:** Records an expense and initiates auto-split.
+- **Request Body:**
 ```json
 {
-  "status": "success",
-  "data": {}
+  "title": "Electricity Bill",
+  "amount": 2400.00,
+  "paid_by": 1
 }
 ```
-
 **POST /api/endpoint**
 - **Description:** [What it does]
 - **Request Body:**
@@ -221,59 +224,17 @@ xcodebuild -workspace App.xcworkspace -scheme App -configuration Debug
 
 ---
 
-### For Hardware Projects:
 
-#### Bill of Materials (BOM)
-
-| Component | Quantity | Specifications | Price | Link/Source |
-|-----------|----------|----------------|-------|-------------|
-| Arduino Uno | 1 | ATmega328P, 16MHz | ₹450 | [Link] |
-| LED | 5 | Red, 5mm, 20mA | ₹5 each | [Link] |
-| Resistor | 5 | 220Ω, 1/4W | ₹1 each | [Link] |
-| Breadboard | 1 | 830 points | ₹100 | [Link] |
-| Jumper Wires | 20 | Male-to-Male | ₹50 | [Link] |
-| [Add more...] | | | | |
-
-**Total Estimated Cost:** ₹[Amount]
-
-#### Assembly Instructions
-
-**Step 1: Prepare Components**
-1. Gather all components listed in the BOM
-2. Check component specifications
-3. Prepare your workspace
-![Step 1](images/assembly-step1.jpg)
-*Caption: All components laid out*
-
-**Step 2: Build the Power Supply**
-1. Connect the power rails on the breadboard
-2. Connect Arduino 5V to breadboard positive rail
-3. Connect Arduino GND to breadboard negative rail
-![Step 2](images/assembly-step2.jpg)
-*Caption: Power connections completed*
-
-**Step 3: Add Components**
-1. Place LEDs on breadboard
-2. Connect resistors in series with LEDs
-3. Connect LED cathodes to GND
-4. Connect LED anodes to Arduino digital pins (2-6)
-![Step 3](images/assembly-step3.jpg)
-*Caption: LED circuit assembled*
-
-**Step 4: [Continue for all steps...]**
-
-**Final Assembly:**
-![Final Build](images/final-build.jpg)
-*Caption: Completed project ready for testing*
-
----
 
 ## Project Demo
 
 ### Video
-[Add your demo video link here - YouTube, Google Drive, etc.]
+[https://github.com/roo-001/bill](https://raw.githubusercontent.com/roo-001/bill/main/public/screenrecord.mp4)
 
-*Explain what the video demonstrates - key features, user flow, technical highlights*
+*A walkthrough showing the transition from Flask to the new interactive Next.js dashboard.*
+
+---
+
 
 ### Additional Demos
 [Add any extra demo materials/links - Live site, APK download, online demo, etc.]
@@ -282,7 +243,7 @@ xcodebuild -workspace App.xcworkspace -scheme App -configuration Debug
 
 ## AI Tools Used (Optional - For Transparency Bonus)
 
-If you used AI tools during development, document them here for transparency:
+Antigravity (AI Engineering Assistant by Google Deepmind),Chatgpt,Claude
 
 **Tool Used:** [Antigravity]
 
